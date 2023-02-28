@@ -2,6 +2,7 @@ const $form = document.querySelector('#form');
 const $textarea = document.querySelector('#tak-description');
 const $list = document.querySelector('#list');
 const $listContent = document.querySelector('#list-content');
+const $saveBTN = document.querySelector('#send-tak-btn');
 const END_POINT =
   'https://script.google.com/macros/s/AKfycbyUoMeRfeYzFhJCA4Sfe9EWFo6qnWezRXt_ocKpwmPJmf5aJEYupKNwmyNNN_CzKgV2/exec';
 
@@ -14,12 +15,73 @@ const END_POINT =
 
 //getSheetData(END_POINT,"lista","dta",(res)=>{console.log(res)})
 
+function saveOrUpdateTak(e) {
+  if (sessionStorage.getItem('id-u').length) {
+    updateTak(localStorage.getItem('id-u'));
+    return;
+  }
+
+  saveTak();
+}
+
 function saveTak() {
   var tarea = $textarea.value;
   var id = generateUUID();
   var modificado = Date.now();
   var object = { tarea, id, modificado };
   insertRows(END_POINT, 'lista', [object], null, renderList);
+}
+
+function updateTak() {
+  var id = sessionStorage.getItem("id-u");
+  var tarea = $textarea.value;
+  var object = { tarea, id };
+  updateRows(END_POINT, 'lista', [object], 'id', null, (list) => {
+    renderList(list);
+    cancelEdit();
+    var edited = document.getElementById(id);
+    edited.scrollIntoView();
+    edited.classList.add("btn-secondary");
+    setTimeout(()=>{
+      edited.classList.remove("btn-secondary");
+    },2500)
+  });
+}
+
+function actualizar(e) {
+  var tag = e.target;
+  if (document.querySelector('div.bg-info.tak')) {
+    document.querySelector('div.bg-info.tak').classList.remove('bg-info');
+  }
+  tag.classList.add('bg-info');
+  sessionStorage.setItem('id-u', tag.id);
+  $textarea.value = tag.innerText;
+  $saveBTN.innerText = 'Actualizar';
+  $form.scrollIntoView();
+  $textarea.focus();
+
+  //agregar btn para cancelar ediccion
+  var btnCancelEdit = document.createElement('button');
+  $saveBTN.parentElement.appendChild(btnCancelEdit);
+  btnCancelEdit.outerHTML = `<button
+  type="submit"
+  id="cancel-edit"
+  onclick="javascript: cancelEdit();"
+  class="btn btn-danger"
+>
+  Cancelar
+</button>`;
+}
+
+function cancelEdit() {
+  $textarea.value = '';
+  $saveBTN.innerText = 'Guardar Tarea';
+  if (document.querySelector('div.bg-info.tak')) {
+    document.querySelector('div.bg-info.tak').classList.remove('bg-info');
+  }
+  document.getElementById(sessionStorage.getItem('id-u')).scrollIntoView();
+  sessionStorage.removeItem('id-u');
+  document.getElementById("cancel-edit").outerHTML = '';
 }
 
 function renderList(list) {
@@ -30,6 +92,7 @@ function renderList(list) {
   takDivClasses += 'border border-danger';
   //numero de columnas
   takDivClasses += ' col-11';
+  takDivClasses += ' tak';
 
   //reorganizando lista:
   var RankedList = list.sort(function (a, b) {
@@ -41,9 +104,7 @@ function renderList(list) {
     $listContent.appendChild(div);
     div.outerHTML = `
     <div class="row">
-    <div id="${object.id}" class="${takDivClasses}">${object.tarea}</div>
-
-
+    <div id="${object.id}" ondblclick="javascript: actualizar(event);" class="${takDivClasses}">${object.tarea}</div>
     <!--Estilos para x de borrar-->
     <div data-id="${object.id}" class="col-1 btn-danger" style="cursor:pointer; text-align:center" onclick="javascript: deleteTak(event);">X</div>
 
