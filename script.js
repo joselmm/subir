@@ -18,7 +18,7 @@ const END_POINT =
 
 function saveOrUpdateTak(e) {
   if (sessionStorage.getItem('id-u')) {
-    updateTak(localStorage.getItem('id-u'));
+    updateTak(sessionStorage.getItem('id-u'));
     return;
   }
 
