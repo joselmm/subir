@@ -9,7 +9,8 @@ const END_POINT =
 //Funciones
 
 (function ocultar(e) {
-  $form.hidden = JSON.parse(localStorage['form-hidden']);
+  if(localStorage['form-hidden']){$form.hidden = JSON.parse(localStorage['form-hidden']);}
+  
   getSheetData(END_POINT, 'lista', 'tareasCargadas', renderList);
 })();
 
