@@ -3,22 +3,36 @@ const $textarea = document.querySelector('#tak-description');
 const $list = document.querySelector('#list');
 const $listContent = document.querySelector('#list-content');
 const $saveBTN = document.querySelector('#send-tak-btn');
+const $alertMessage = document.getElementById('alert-message');
+const $shadow = document.getElementById('shadow');
 const END_POINT =
   'https://script.google.com/macros/s/AKfycbyUoMeRfeYzFhJCA4Sfe9EWFo6qnWezRXt_ocKpwmPJmf5aJEYupKNwmyNNN_CzKgV2/exec';
 
 //Funciones
 
-(function ocultar(e) {
+(function ocultar() {
   if (localStorage['form-hidden']) {
     $form.hidden = JSON.parse(localStorage['form-hidden']);
   }
 
-  getSheetData(END_POINT, 'lista', 'tareasCargadas', renderList);
+  //cargando lista
+  $alertMessage.innerText = 'Cargando';
+  messageToggle(false);
+  getSheetData(END_POINT, 'lista', 'tareasCargadas', (list) => {
+    renderList(list);
+    messageToggle(true);
+  });
 })();
 
 //getSheetData(END_POINT,"lista","dta",(res)=>{console.log(res)})
 
-function saveOrUpdateTak(e) {
+//ocultar y desocultar shadow
+
+function messageToggle(oculto) {
+  $shadow.hidden = oculto;
+}
+
+function saveOrUpdateTak() {
   if (sessionStorage.getItem('id-u')) {
     updateTak(sessionStorage.getItem('id-u'));
     return;
@@ -28,6 +42,10 @@ function saveOrUpdateTak(e) {
 }
 
 function saveTak() {
+  //message
+  $alertMessage.innerText = 'Guardando';
+  messageToggle(false);
+
   var tarea = $textarea.value;
   var id = generateUUID();
   sessionStorage.setItem('saved-id', id);
@@ -42,10 +60,15 @@ function saveTak() {
     setTimeout(() => {
       saved.classList.remove('btn-info');
     }, 2500);
+    messageToggle(true);
   });
 }
 
 function updateTak() {
+  //mensage
+  $alertMessage.innerText = 'Actualizando';
+  messageToggle(false);
+
   var id = sessionStorage.getItem('id-u');
   var tarea = $textarea.value;
   var object = { tarea, id };
@@ -58,6 +81,7 @@ function updateTak() {
     setTimeout(() => {
       edited.classList.remove('btn-secondary');
     }, 2500);
+    messageToggle(true);
   });
 }
 
@@ -140,13 +164,18 @@ function generateUUID() {
 }
 
 function deleteTak(e) {
+  $alertMessage.innerText = 'Eliminando';
+  messageToggle(false);
   deleteRows(
     END_POINT,
     'lista',
     [{ id: e.target.dataset.id }],
     'id',
     null,
-    renderList
+    (list) => {
+      renderList(list);
+      messageToggle(true);
+    }
   );
 }
 
