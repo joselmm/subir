@@ -9,8 +9,10 @@ const END_POINT =
 //Funciones
 
 (function ocultar(e) {
-  if(localStorage['form-hidden']){$form.hidden = JSON.parse(localStorage['form-hidden']);}
-  
+  if (localStorage['form-hidden']) {
+    $form.hidden = JSON.parse(localStorage['form-hidden']);
+  }
+
   getSheetData(END_POINT, 'lista', 'tareasCargadas', renderList);
 })();
 
@@ -28,13 +30,23 @@ function saveOrUpdateTak(e) {
 function saveTak() {
   var tarea = $textarea.value;
   var id = generateUUID();
+  sessionStorage.setItem('saved-id', id);
   var modificado = Date.now();
   var object = { tarea, id, modificado };
-  insertRows(END_POINT, 'lista', [object], null, renderList);
+  insertRows(END_POINT, 'lista', [object], null, (list) => {
+    renderList(list);
+    var id = sessionStorage.getItem('saved-id');
+    var saved = document.getElementById(id);
+    saved.scrollIntoView();
+    saved.classList.add('btn-info');
+    setTimeout(() => {
+      saved.classList.remove('btn-info');
+    }, 2500);
+  });
 }
 
 function updateTak() {
-  var id = sessionStorage.getItem("id-u");
+  var id = sessionStorage.getItem('id-u');
   var tarea = $textarea.value;
   var object = { tarea, id };
   updateRows(END_POINT, 'lista', [object], 'id', null, (list) => {
@@ -42,10 +54,10 @@ function updateTak() {
     cancelEdit();
     var edited = document.getElementById(id);
     edited.scrollIntoView();
-    edited.classList.add("btn-secondary");
-    setTimeout(()=>{
-      edited.classList.remove("btn-secondary");
-    },2500)
+    edited.classList.add('btn-secondary');
+    setTimeout(() => {
+      edited.classList.remove('btn-secondary');
+    }, 2500);
   });
 }
 
@@ -82,7 +94,7 @@ function cancelEdit() {
   }
   document.getElementById(sessionStorage.getItem('id-u')).scrollIntoView();
   sessionStorage.removeItem('id-u');
-  document.getElementById("cancel-edit").outerHTML = '';
+  document.getElementById('cancel-edit').outerHTML = '';
 }
 
 function renderList(list) {
