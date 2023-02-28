@@ -17,7 +17,7 @@ const END_POINT =
 //getSheetData(END_POINT,"lista","dta",(res)=>{console.log(res)})
 
 function saveOrUpdateTak(e) {
-  if (sessionStorage.getItem('id-u').length) {
+  if (sessionStorage.getItem('id-u')) {
     updateTak(localStorage.getItem('id-u'));
     return;
   }
