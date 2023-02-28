@@ -26,13 +26,24 @@
         align-items: center;
         background: black;
         position: fixed;
-        z-index: 6;
+        z-index: 5;
         width: 100vw;
         height: 100vh;
         opacity: 0.5;
       "
-    >
-    <span
+    ></div>
+    <div
+    hidden
+      id="shadow-invisible"
+      style="
+        display: flex;
+        align-items: center;
+        position: fixed;
+        z-index: 6;
+        width: 100vw;
+        height: 100vh;
+      "
+    > <span
     id="alert-message"
     style="
       margin: 0 auto;
@@ -42,13 +53,10 @@
       background: green;
       color: white;
       opacity: 1 !important;
-      
-      z-index:8;
     "
     >Hola mundo</span
-  >
-  </div>
-    
+  ></div>
+   
     <br />
     <div
       style="position: absolute; right: 20px; cursor: pointer"
