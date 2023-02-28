@@ -5,6 +5,7 @@ const $listContent = document.querySelector('#list-content');
 const $saveBTN = document.querySelector('#send-tak-btn');
 const $alertMessage = document.getElementById('alert-message');
 const $shadow = document.getElementById('shadow');
+const $shadowInvisible = document.getElementById("shadow-invisible");
 const END_POINT =
   'https://script.google.com/macros/s/AKfycbyUoMeRfeYzFhJCA4Sfe9EWFo6qnWezRXt_ocKpwmPJmf5aJEYupKNwmyNNN_CzKgV2/exec';
 
@@ -30,6 +31,7 @@ const END_POINT =
 
 function messageToggle(oculto) {
   $shadow.hidden = oculto;
+  $shadowInvisible.hidden = oculto;
 }
 
 function saveOrUpdateTak() {
@@ -98,6 +100,7 @@ function actualizar(e) {
   $textarea.focus();
 
   //agregar btn para cancelar ediccion
+  if(document.querySelector("#cancel-edit")){document.querySelector("#cancel-edit").outerHTML=""};
   var btnCancelEdit = document.createElement('button');
   $saveBTN.parentElement.appendChild(btnCancelEdit);
   btnCancelEdit.outerHTML = `<button
