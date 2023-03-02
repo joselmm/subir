@@ -6,14 +6,13 @@ const $saveBTN = document.querySelector('#send-tak-btn');
 const $alertMessage = document.getElementById('alert-message');
 const $shadow = document.getElementById('shadow');
 const $shadowInvisible = document.getElementById('shadow-invisible');
-const $undoDeleteBTN =  document.getElementById('undo-delete');
+const $undoDeleteBTN = document.getElementById('undo-delete');
 const END_POINT =
   'https://script.google.com/macros/s/AKfycbyUoMeRfeYzFhJCA4Sfe9EWFo6qnWezRXt_ocKpwmPJmf5aJEYupKNwmyNNN_CzKgV2/exec';
 
 //Funciones
-let takList=[];
-(
-  function ocultar() {
+let takList = [];
+(function ocultar() {
   if (localStorage['form-hidden']) {
     $form.hidden = JSON.parse(localStorage['form-hidden']);
   }
@@ -24,7 +23,7 @@ let takList=[];
   getSheetData(END_POINT, 'lista', 'tareasCargadas', (list) => {
     renderList(list);
     messageToggle(true);
-    takList=list
+    takList = list;
   });
 })();
 
@@ -46,8 +45,6 @@ function saveOrUpdateTak() {
   saveTak();
 }
 
-
-
 function saveTak() {
   //message
   $alertMessage.innerText = 'Guardando';
@@ -68,8 +65,7 @@ function saveTak() {
       saved.classList.remove('btn-info');
     }, 2500);
     messageToggle(true);
-    $textarea.value="";
-    
+    $textarea.value = '';
   });
 }
 
@@ -96,8 +92,9 @@ function updateTak() {
 
 function actualizar(e) {
   // si esta oculto el formulario
-  if($form.hidden){closeWindowADDTak()}
-
+  if ($form.hidden) {
+    closeWindowADDTak();
+  }
 
   var tag = e.target;
   if (document.querySelector('div.bg-info.tak')) {
@@ -117,13 +114,13 @@ function actualizar(e) {
   var btnCancelEdit = document.createElement('button');
   $saveBTN.parentElement.appendChild(btnCancelEdit);
   btnCancelEdit.outerHTML = `<button
-  type="submit"
-  id="cancel-edit"
-  onclick="javascript: cancelEdit();"
-  class="btn btn-danger"
->
-  Cancelar
-</button>`;
+    type="submit"
+    id="cancel-edit"
+    onclick="javascript: cancelEdit();"
+    class="btn btn-danger"
+  >
+    Cancelar
+  </button>`;
 }
 
 function cancelEdit() {
@@ -156,13 +153,13 @@ function renderList(list) {
     var div = document.createElement('div');
     $listContent.appendChild(div);
     div.outerHTML = `
-    <div class="row">
-    <div id="${object.id}" ondblclick="javascript: actualizar(event);" class="${takDivClasses}">${object.tarea}</div>
-    <!--Estilos para x de borrar-->
-    <div data-id="${object.id}" class="col-1 btn-danger" style="cursor:pointer; text-align:center" onclick="javascript: deleteTak(event);">X</div>
+      <div class="row">
+      <div id="${object.id}" ondblclick="javascript: actualizar(event);" class="${takDivClasses}">${object.tarea}</div>
+      <!--Estilos para x de borrar-->
+      <div data-id="${object.id}" class="col-1 btn-danger" style="cursor:pointer; text-align:center" onclick="javascript: deleteTak(event);">X</div>
 
-    <div>
-    `;
+      <div>
+      `;
     div = document.getElementById(object.id);
     // console.log()
     div.innerText = object.tarea;
@@ -181,10 +178,9 @@ function generateUUID() {
 
 // variable que usa para deshacer borrado de tarea
 let lastTimeUndo = 0;
-takDeletedId = null; 
+takDeletedId = null;
 function deleteTak(e) {
-  
-  takDeletedId=""+e.target.dataset.id;
+  takDeletedId = '' + e.target.dataset.id;
 
   $alertMessage.innerText = 'Eliminando';
   messageToggle(false);
@@ -198,20 +194,20 @@ function deleteTak(e) {
     (list) => {
       renderList(list);
       messageToggle(true);
-      $undoDeleteBTN.hidden=false;
-    lastTimeUndo=Date.now();
-    setTimeout(()=>{
-      //desaparecer opcion de deshacer borrado
-      if(Date.now()-lastTimeUndo>=3000){
-        $undoDeleteBTN.hidden=true;
-      };
-    },3000)
+      $undoDeleteBTN.hidden = false;
+      lastTimeUndo = Date.now();
+      setTimeout(() => {
+        //desaparecer opcion de deshacer borrado
+        if (Date.now() - lastTimeUndo >= 3000) {
+          $undoDeleteBTN.hidden = true;
+        }
+      }, 3000);
     }
   );
 }
 
-function undoDelete(){
-  takDeleted = takList.filter((tak)=> ""+tak.id==""+takDeletedId)[0];
+function undoDelete() {
+  takDeleted = takList.filter((tak) => '' + tak.id == '' + takDeletedId)[0];
   $alertMessage.innerText = 'Deshaciendo';
   messageToggle(false);
   sessionStorage.setItem('saved-id', takDeleted.id);
@@ -228,7 +224,6 @@ function undoDelete(){
   });
 }
 
-
 function closeWindowADDTak() {
   $form.hidden = !$form.hidden;
   localStorage.setItem('form-hidden', $form.hidden);
@@ -240,11 +235,12 @@ function closeWindowADDTak() {
 
 async function uploadFiles(e) {
   e.preventDefault();
-  messageToggle(false);
-  $alertMessage.innerText = 'Subiendo';
   const filesInput = document.querySelector('#files-loaded');
-  var takDescription = document.querySelector('#tak-description');
+
   if (filesInput.files.length > 0) {
+    messageToggle(false);
+    $alertMessage.innerText = 'Subiendo';
+    var takDescription = document.querySelector('#tak-description');
     for (file of filesInput.files) {
       var base64 = await fileToBase64(file)
         .then((base64String) => {
@@ -279,8 +275,7 @@ async function uploadFiles(e) {
       )
         .then((res) => res.json())
         .then((res) => res);
-        messageToggle(true);
-
+      messageToggle(true);
 
       if (result.status == 'error') {
         console.error('ocurrio con la respuesta del servidor de appscript: ');
