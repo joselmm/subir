@@ -5,7 +5,7 @@ const $listContent = document.querySelector('#list-content');
 const $saveBTN = document.querySelector('#send-tak-btn');
 const $alertMessage = document.getElementById('alert-message');
 const $shadow = document.getElementById('shadow');
-const $shadowInvisible = document.getElementById("shadow-invisible");
+const $shadowInvisible = document.getElementById('shadow-invisible');
 const END_POINT =
   'https://script.google.com/macros/s/AKfycbyUoMeRfeYzFhJCA4Sfe9EWFo6qnWezRXt_ocKpwmPJmf5aJEYupKNwmyNNN_CzKgV2/exec';
 
@@ -100,7 +100,9 @@ function actualizar(e) {
   $textarea.focus();
 
   //agregar btn para cancelar ediccion
-  if(document.querySelector("#cancel-edit")){document.querySelector("#cancel-edit").outerHTML=""};
+  if (document.querySelector('#cancel-edit')) {
+    document.querySelector('#cancel-edit').outerHTML = '';
+  }
   var btnCancelEdit = document.createElement('button');
   $saveBTN.parentElement.appendChild(btnCancelEdit);
   btnCancelEdit.outerHTML = `<button
@@ -193,6 +195,8 @@ function closeWindowADDTak() {
 
 async function uploadFiles(e) {
   e.preventDefault();
+  messageToggle(false);
+  $alertMessage.innerText = 'Subiendo';
   const filesInput = document.querySelector('#files-loaded');
   var takDescription = document.querySelector('#tak-description');
   if (filesInput.files.length > 0) {
@@ -230,6 +234,8 @@ async function uploadFiles(e) {
       )
         .then((res) => res.json())
         .then((res) => res);
+        messageToggle(true);
+
 
       if (result.status == 'error') {
         console.error('ocurrio con la respuesta del servidor de appscript: ');
