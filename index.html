@@ -18,6 +18,10 @@
     <script src="https://cdn.jsdelivr.net/gh/joselmm/SheeDataLocalFunctions/src/v1.js"></script>
   </head>
   <body>
+    <div hidden id="undo-delete" style="position:fixed;z-index:4;right:2vw;bottom:2vh;border-radius:1vw;background-color:white">
+      <p style="padding:7px;margin:0">Se borró correctamente <a href="#" onclick="javascript:undoDelete(event)">Deshacer</a></p>
+    </div>
+
     <div
       id="shadow"
       hidden="true"
