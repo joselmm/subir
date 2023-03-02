@@ -95,6 +95,10 @@ function updateTak() {
 }
 
 function actualizar(e) {
+  // si esta oculto el formulario
+  if($form.hidden){closeWindowADDTak()}
+
+
   var tag = e.target;
   if (document.querySelector('div.bg-info.tak')) {
     document.querySelector('div.bg-info.tak').classList.remove('bg-info');
