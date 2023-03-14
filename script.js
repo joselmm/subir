@@ -156,7 +156,9 @@ function renderList(list) {
       <div class="row">
       <div id="${object.id}" ondblclick="javascript: actualizar(event);" class="${takDivClasses}">${object.tarea}</div>
       <!--Estilos para x de borrar-->
-      <div data-id="${object.id}" class="col-1 btn-danger" style="cursor:pointer; text-align:center" onclick="javascript: deleteTak(event);">X</div>
+      <div data-id="${object.id}" class="col-1 btn-danger" style="cursor: pointer;align-items: center;display: flex;" onclick="javascript: deleteTak(event);">
+        <span style="margin: 0 auto;">X</span>
+      </div>
 
       <div>
       `;
